@@ -13,6 +13,7 @@ resource "random_password" "master"{
 
 resource "aws_secretsmanager_secret" "password" {
   name = var.rds_secret_name
+  kms_key_id = var.kms_key_id
 }
 
 resource "aws_secretsmanager_secret_version" "password" {
@@ -120,14 +121,14 @@ module "db_cluster_parameter_group" {
 module "db_cluster" {
   source                                        = "../modules/rds_modules/rds_db_cluster"
   
-  cluster_identifier                            = "${local.name}-${var.region}"
+  cluster_identifier                            = "${local.name}"
   
   engine                                        = var.engine
   engine_version                                = var.engine == "postgres" ? var.engine_version_pg : var.engine_version_mysql
  
   db_cluster_instance_class                     = var.db_cluster_instance_class
 
-  db_cluster_parameter_group_name                = module.db_cluster_parameter_group.db_parameter_group_id
+  db_cluster_parameter_group_name                = module.db_cluster_parameter_group.cluster_parameter_group_id
 
   allocated_storage                             = var.allocated_storage
   iops                                          = var.iops

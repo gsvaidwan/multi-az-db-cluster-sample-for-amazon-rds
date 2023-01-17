@@ -13,6 +13,7 @@ resource "random_password" "master"{
 
 resource "aws_secretsmanager_secret" "password" {
   name = var.rds_secret_name
+  kms_key_id = var.kms_key_id
 }
 
 resource "aws_secretsmanager_secret_version" "password" {
@@ -91,13 +92,22 @@ module "subnet_group" {
 }
 
 ################################################################################
+# Cluster Parameter Group from Module
+################################################################################
+module "db_parameter_group" {
+  source                                      = "../modules/rds_modules/rds_db_parameter_group"
+  name                                        = local.name
+  family                                      = "${var.engine}${split(".",var.engine == "postgres" ? var.engine_version_pg : var.engine_version_mysql)[0]}"
+}
+
+################################################################################
 # RDS Multi-AZ DB Instance Module
 ################################################################################
 
 module "db" {
   source                                      = "../modules/rds_modules/rds_db_instance"
 
-  identifier                                  = "${local.name}-${var.region}"
+  identifier                                  = "${local.name}"
 
   engine                                      = var.engine
   engine_version                              = var.engine == "postgres" ? var.engine_version_pg : var.engine_version_mysql
@@ -111,6 +121,7 @@ module "db" {
   port                                        = var.port == "" ? var.engine == "postgres" ? "5432" : "3306" : var.port
   password                                    = (var.snapshot_identifier != "") ? null : (var.password == "" ? aws_secretsmanager_secret.password.id : var.password)
 
+  parameter_group_name                        = module.db_parameter_group.db_parameter_group_id
   multi_az                                    = var.multi_az
 
   db_subnet_group_name                       = module.subnet_group.db_subnet_group_id

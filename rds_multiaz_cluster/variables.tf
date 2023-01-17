@@ -1,19 +1,21 @@
 variable "region" {
   description = "Mention the refion you want to deploy the resources"
   type        = string
-  default     = "us-east-2"
 }
 
 variable "name" {
   description = "Prefix for the resources"
   type        = string
-  default     = "terra"
 }
 
 variable "rds_secret_name" {
   description = "Name for the rds secrets manager"
   type        = string
-  default     = "terraq"
+}
+
+variable "kms_key_id" {
+  description = "The ARN for the KMS encryption key. "
+  type        = string
 }
 
 variable "vpccidr" {
@@ -145,8 +147,6 @@ variable "enable_dhcp_options" {
   default     = false
 }
 
-###Database
-
 variable "engine" {
   description = "Enter the engine name either postgres or mysql ( MAZ Cluster Supported)"
   type        = string
@@ -165,20 +165,17 @@ variable "engine_version_mysql" {
   default     = "8.0.30"
 }
 
-
 variable "db_cluster_instance_class" {
   description = "RDS Instance class"
   type        = string
   default     = "db.m5d.xlarge"
 }
 
-
 variable "allocated_storage" {
   description = "RDS Allocated Storage"
   type        = number
   default     = 100
 }
-
 
 variable "iops" {
   description = "RDS Storage IOPS"

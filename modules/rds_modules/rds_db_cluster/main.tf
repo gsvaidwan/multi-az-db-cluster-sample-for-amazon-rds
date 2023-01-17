@@ -132,3 +132,50 @@ data "aws_iam_policy_document" "enhanced_monitoring" {
   }
 }
 
+###################
+# AWS Backup Plan 
+###################
+
+resource "aws_backup_plan" "multiaz" {
+  name = "tf_multiaz_backup_plan"
+
+  rule {
+    rule_name         = "tf_multiaz_backup_rule"
+    target_vault_name = "vault-name"
+    schedule          = "cron(0 12 * * ? *)"
+  }
+}
+
+resource "aws_iam_role" "backup_role" {
+  name               = "backup_role"
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": ["sts:AssumeRole"],
+      "Effect": "allow",
+      "Principal": {
+        "Service": ["backup.amazonaws.com"]
+      }
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_role_policy_attachment" "backup_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+  role       = aws_iam_role.backup_role.name
+}
+
+resource "aws_backup_selection" "backup_selection" {
+  iam_role_arn = aws_iam_role.backup_role.arn
+  name         = "tf_multi-az_backup_selection"
+  plan_id      = aws_backup_plan.multiaz.id
+
+   resources = [
+    aws_rds_cluster.rds_cluster[0].arn
+  ]
+}
+

@@ -1,17 +1,20 @@
 variable "region" {
   description = "Mention the region you want to deploy the resources"
   type        = string
-  default     = "us-east-1"
 }
 
 variable "name" {
   description = "Prefix for the resources"
   type        = string
-  #default     = null
 }
 
 variable "rds_secret_name" {
   description = "Secret name for RDS instance"
+  type        = string
+}
+
+variable "kms_key_id" {
+  description = "The ARN for the KMS encryption key"
   type        = string
 }
 
@@ -240,7 +243,7 @@ variable "enabled_cloudwatch_logs_exports" {
 variable "create_cloudwatch_log_group" {
   description = "Create Cloudwatch log group"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "backup_retention_period" {

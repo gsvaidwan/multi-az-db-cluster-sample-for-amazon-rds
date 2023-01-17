@@ -13,13 +13,44 @@ resource "aws_rds_cluster_parameter_group" "this" {
   description = local.description
   family      = var.family
 
-  dynamic "parameter" {
-    for_each = var.parameters
-    content {
-      name         = parameter.value.name
-      value        = parameter.value.value
-      apply_method = lookup(parameter.value, "apply_method", null)
-    }
+  parameter {
+    name="log_statement"
+    value="all"
+  }
+
+  parameter {
+    name="log_min_duration_statement"
+    value="1"
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      "Name" = var.name
+    },
+  )
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_db_parameter_group" "this" {
+  count = var.create ? 1 : 0
+
+  name        = local.name
+  name_prefix = local.name_prefix
+  description = local.description
+  family      = var.family
+
+  parameter {
+    name="log_statement"
+    value="all"
+  }
+
+  parameter {
+    name="log_min_duration_statement"
+    value="1"
   }
 
   tags = merge(

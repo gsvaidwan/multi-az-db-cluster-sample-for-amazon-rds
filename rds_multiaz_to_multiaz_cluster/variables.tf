@@ -1,17 +1,20 @@
 variable "region" {
   description = "Mention the refion you want to deploy the resources"
   type        = string
-  default     = "us-west-2"
 }
 
 variable "name" {
   description = "Prefix for the resources"
   type        = string
-  #default     = null
 }
 
 variable "rds_secret_name" {
   description = "RDS Secret name for the RDS resources"
+  type        = string
+}
+
+variable "kms_key_id" {
+  description = "The ARN for the KMS encryption key"
   type        = string
 }
 
@@ -289,7 +292,7 @@ variable "snapshot_db_cluster_identifer" {
 variable "deletion_protection" {
   description = "Enable delete protection for the RDS"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "performance_insights_enabled" {
