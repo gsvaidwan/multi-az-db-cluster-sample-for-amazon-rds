@@ -56,26 +56,6 @@ output "db_instance_port" {
   value       = module.db_cluster.db_instance_port
 }
 
-#output "db_subnet_group_id" {
-#  description = "The db subnet group name"
-#  value       = module.db_cluster.db_subnet_group_id
-#}
-
-#output "db_subnet_group_arn" {
-#  description = "The ARN of the db subnet group"
-#  value       = module.db_cluster.db_subnet_group_arn
-#}
-
-#output "db_parameter_group_id" {
-#  description = "The db parameter group id"
-#  value       = module.db_cluster.db_parameter_group_id
-#}
-
-#output "db_parameter_group_arn" {
-#  description = "The ARN of the db parameter group"
-##  value       = module.db_cluster.db_parameter_group_arn
-#}
-
 output "db_instance_cloudwatch_log_groups" {
   description = "Map of CloudWatch log groups created and their attributes"
   value       = module.db_cluster.db_instance_cloudwatch_log_groups

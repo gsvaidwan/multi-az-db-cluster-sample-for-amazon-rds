@@ -137,17 +137,17 @@ data "aws_iam_policy_document" "enhanced_monitoring" {
 ###################
 
 resource "aws_backup_plan" "multiaz" {
-  name = "tf_multiaz_backup_plan"
+  name = "${var.cluster_identifier}_backup_plan"
 
   rule {
-    rule_name         = "tf_multiaz_backup_rule"
-    target_vault_name = "vault-name"
+    rule_name         = "${var.cluster_identifier}_tf_multiaz_backup_rule"
+    target_vault_name = "Default"
     schedule          = "cron(0 12 * * ? *)"
   }
 }
 
 resource "aws_iam_role" "backup_role" {
-  name               = "backup_role"
+  name               = "${var.cluster_identifier}_backup_role"
   assume_role_policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -171,7 +171,7 @@ resource "aws_iam_role_policy_attachment" "backup_policy" {
 
 resource "aws_backup_selection" "backup_selection" {
   iam_role_arn = aws_iam_role.backup_role.arn
-  name         = "tf_multi-az_backup_selection"
+  name         = "${var.cluster_identifier}_backup_selection"
   plan_id      = aws_backup_plan.multiaz.id
 
    resources = [

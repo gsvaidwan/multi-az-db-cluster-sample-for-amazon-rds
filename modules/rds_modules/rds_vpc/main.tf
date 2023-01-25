@@ -752,14 +752,20 @@ resource "aws_default_vpc" "this" {
 #VPC FLow Log
 ############################
 
+resource "aws_s3_bucket" "example" {
+  bucket = "${var.name}-vpc-flow-log-bucket"
+}
+
 resource "aws_flow_log" "vpc_flow_log" {
+  log_destination      = aws_s3_bucket.example.arn
+  log_destination_type = "s3"
   iam_role_arn    = aws_iam_role.vpc_flow_iam.arn
   traffic_type    = "ALL"
   vpc_id          = aws_vpc.this[0].id
 }
 
 resource "aws_iam_role" "vpc_flow_iam" {
-  name = "vpc_flow_iam"
+  name = "${var.name}_vpc_flow_iam"
 
   assume_role_policy = <<EOF
 {
@@ -779,7 +785,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "vpc_flow_iam_policy" {
-  name = "vpc_flow_iam_policy"
+  name = "${var.name}_vpc_flow_iam_policy"
   role = aws_iam_role.vpc_flow_iam.id
 
   policy = <<EOF
@@ -801,3 +807,4 @@ resource "aws_iam_role_policy" "vpc_flow_iam_policy" {
 }
 EOF
 }
+

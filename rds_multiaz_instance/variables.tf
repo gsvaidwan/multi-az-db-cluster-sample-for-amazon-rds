@@ -152,7 +152,6 @@ variable "enable_dhcp_options" {
 variable "engine" {
   description = "Enter the engine name either postgres or mysql ( MAZ Cluster Supported)"
   type        = string
-  #default     = "postgres"
 }
 
 variable "engine_version_pg" {
@@ -191,13 +190,11 @@ variable "max_allocated_storage" {
 variable "db_name" {
   description = "Database Name"
   type        = string
-  ##default    = 1000
 }
 
 variable "username" {
   description = "Master User Name"
   type        = string
-  ##default   = admin
 }
 
 variable "port" {

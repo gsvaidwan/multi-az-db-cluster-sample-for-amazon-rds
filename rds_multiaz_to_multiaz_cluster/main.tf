@@ -108,10 +108,17 @@ module "subnet_group" {
 ################################################################################
 # Cluster Parameter Group from Module
 ################################################################################
+
+
+data "aws_rds_engine_version" "family" {
+  engine   = var.engine
+  version  = var.engine == "postgres" ? var.engine_version_pg : var.engine_version_mysql
+}
+
 module "db_cluster_parameter_group" {
   source                                      = "../modules/rds_modules/rds_db_parameter_group"
   name                                        = local.name
-  family                                      = "${var.engine}${split(".",var.engine == "postgres" ? var.engine_version_pg : var.engine_version_mysql)[0]}"
+  family                                      = data.aws_rds_engine_version.family.parameter_group_family
 }
 
 ################################################################################

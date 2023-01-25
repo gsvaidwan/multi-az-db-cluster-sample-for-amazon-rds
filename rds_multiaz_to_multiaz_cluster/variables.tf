@@ -203,13 +203,11 @@ variable "max_allocated_storage" {
 variable "database_name" {
   description = "Database Name"
   type        = string
-  ##default    = 1000
 }
 
 variable "master_username" {
-  description = "Database Name"
+  description = "Master user Name"
   type        = string
-  ##default   = admin
 }
 
 variable "port" {
@@ -286,7 +284,6 @@ variable "snapshot_identifier" {
 variable "snapshot_db_cluster_identifer" {
   description = "id of snapshot to restore. If you do not want to restore a db, leave the default empty string."
   type        = string
-  #default     = ""
 }
 
 variable "deletion_protection" {
